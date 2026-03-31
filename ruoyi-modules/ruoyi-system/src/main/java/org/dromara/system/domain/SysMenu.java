@@ -136,11 +136,11 @@ public class SysMenu extends BaseEntity {
         // 非外链并且是一级目录（类型为目录）
         if (Constants.TOP_PARENT_ID.equals(getParentId()) && SystemConstants.TYPE_DIR.equals(getMenuType())
             && SystemConstants.NO.equals(getIsFrame())) {
-            routerPath = "/" + this.path;
+            routerPath = StringUtils.SLASH + this.path;
         }
         // 非外链并且是一级目录（类型为菜单）
         else if (isMenuFrame()) {
-            routerPath = "/";
+            routerPath = StringUtils.SLASH;
         }
         return routerPath;
     }

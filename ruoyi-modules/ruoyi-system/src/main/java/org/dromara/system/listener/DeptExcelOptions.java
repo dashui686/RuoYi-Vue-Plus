@@ -2,6 +2,7 @@ package org.dromara.system.listener;
 
 import cn.hutool.core.lang.tree.Tree;
 import lombok.RequiredArgsConstructor;
+import org.dromara.common.core.utils.StringUtils;
 import org.dromara.common.core.utils.TreeBuildUtils;
 import org.dromara.common.excel.core.ExcelOptionsProvider;
 import org.dromara.system.domain.bo.SysDeptBo;
@@ -31,7 +32,7 @@ public class DeptExcelOptions implements ExcelOptionsProvider {
     @Override
     public Set<String> getOptions() {
         List<Tree<Long>> trees = deptService.selectDeptTreeList(new SysDeptBo());
-        Map<String, Tree<Long>> treeMap = TreeBuildUtils.buildTreeNodeMap(trees, "/", Tree::getName);
+        Map<String, Tree<Long>> treeMap = TreeBuildUtils.buildTreeNodeMap(trees, StringUtils.SLASH, Tree::getName);
         return treeMap.keySet();
     }
 

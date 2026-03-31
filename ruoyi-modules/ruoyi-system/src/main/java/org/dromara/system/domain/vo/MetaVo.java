@@ -70,7 +70,7 @@ public class MetaVo {
         if (StringUtils.ishttp(link)) {
             this.link = link;
         }
-        if (StringUtils.startWithAnyIgnoreCase(activeMenu, "/")) {
+        if (StringUtils.startWithAnyIgnoreCase(activeMenu, StringUtils.SLASH)) {
             this.activeMenu = activeMenu;
         }
     }

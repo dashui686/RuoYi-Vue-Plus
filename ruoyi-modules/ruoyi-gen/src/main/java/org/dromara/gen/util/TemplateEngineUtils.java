@@ -202,8 +202,8 @@ public class TemplateEngineUtils {
         // 业务名称
         String businessName = genTable.getBusinessName();
 
-        String javaPath = PROJECT_PATH + "/" + StringUtils.replace(packageName, ".", "/");
-        String mybatisPath = MYBATIS_PATH + "/" + moduleName;
+        String javaPath = PROJECT_PATH + StringUtils.SLASH + StringUtils.replace(packageName, ".", StringUtils.SLASH);
+        String mybatisPath = MYBATIS_PATH + StringUtils.SLASH + moduleName;
         String vuePath = "vue";
         // templatePath
         // genFilePathFormat

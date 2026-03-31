@@ -50,7 +50,7 @@ public class DeptExcelConverter implements Converter<Long> {
 
         Map<String, Tree<Long>> deptPathToTreeMap = TreeBuildUtils.buildTreeNodeMap(
             SpringUtils.getBean(ISysDeptService.class).selectDeptTreeList(new SysDeptBo()),
-            "/",
+            StringUtils.SLASH,
             Tree::getName
         );
 

@@ -110,7 +110,7 @@ public class SpringDocConfig {
     public OpenApiCustomizer openApiCustomizer() {
         String contextPath = serverProperties.getServlet().getContextPath();
         String finalContextPath;
-        if (StringUtils.isBlank(contextPath) || "/".equals(contextPath)) {
+        if (StringUtils.isBlank(contextPath) || StringUtils.SLASH.equals(contextPath)) {
             finalContextPath = "";
         } else {
             finalContextPath = contextPath;
