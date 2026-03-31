@@ -92,7 +92,7 @@ public interface SysMenuMapper extends BaseMapperPlus<SysMenu, SysMenuVo>, MPJBa
     }
 
     /**
-     * 根据用户ID查询菜单
+     * 查询正常状态下的全部的菜单和目录
      *
      * @return 菜单列表
      */
@@ -129,6 +129,13 @@ public interface SysMenuMapper extends BaseMapperPlus<SysMenu, SysMenuVo>, MPJBa
             .toList();
     }
 
+    /**
+     * 根据条件查询当前用户的菜单列表
+     *
+     * @param menu   菜单筛选条件
+     * @param userId 用户ID
+     * @return 菜单列表
+     */
     default List<SysMenuVo> selectMenuListByUserId(SysMenuBo menu, Long userId) {
         return this.selectJoinList(SysMenuVo.class, JoinWrappers.lambda("m", SysMenu.class)
             .distinct()
@@ -147,6 +154,12 @@ public interface SysMenuMapper extends BaseMapperPlus<SysMenu, SysMenuVo>, MPJBa
             .orderByAsc("m", SysMenu::getOrderNum));
     }
 
+    /**
+     * 查询当前用户的菜单树数据
+     *
+     * @param userId 用户ID
+     * @return 菜单列表
+     */
     default List<SysMenu> selectMenuTreeByUserId(Long userId) {
         return this.selectJoinList(SysMenu.class, JoinWrappers.lambda("m", SysMenu.class)
             .distinct()
