@@ -136,6 +136,11 @@ public class VelocityUtils {
         } else if (GenConstants.TPL_TREE.equals(tplCategory)) {
             templates.add("vm/vue/index-tree.vue.vm");
         }
+        // Vben Admin 前端模板
+        templates.add("vben/ts/api.ts.vm");
+        templates.add("vben/vue/data.ts.vm");
+        templates.add("vben/vue/list.vue.vm");
+        templates.add("vben/vue/modules/form.vue.vm");
         return templates;
     }
 
@@ -187,6 +192,17 @@ public class VelocityUtils {
             fileName = StringUtils.format("{}/views/{}/{}/index.vue", vuePath, moduleName, businessName);
         } else if (template.contains("index-tree.vue.vm")) {
             fileName = StringUtils.format("{}/views/{}/{}/index.vue", vuePath, moduleName, businessName);
+        }
+        // Vben Admin 前端文件名映射
+        String vbenPath = "vben";
+        if (template.contains("vben/ts/api.ts.vm")) {
+            fileName = StringUtils.format("{}/api/{}/{}/index.ts", vbenPath, moduleName, businessName);
+        } else if (template.contains("vben/vue/data.ts.vm")) {
+            fileName = StringUtils.format("{}/views/{}/{}/data.ts", vbenPath, moduleName, businessName);
+        } else if (template.contains("vben/vue/list.vue.vm")) {
+            fileName = StringUtils.format("{}/views/{}/{}/list.vue", vbenPath, moduleName, businessName);
+        } else if (template.contains("vben/vue/modules/form.vue.vm")) {
+            fileName = StringUtils.format("{}/views/{}/{}/modules/form.vue", vbenPath, moduleName, businessName);
         }
         return fileName;
     }

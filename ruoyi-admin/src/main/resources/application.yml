@@ -102,6 +102,7 @@ sa-token:
   is-share: false
   # jwt秘钥
   jwt-secret-key: abcdefghijklmnopqrstuvwxyz
+  timeout: 0
 
 # security配置
 security:
@@ -115,6 +116,7 @@ security:
     - /error
     - /*/api-docs
     - /*/api-docs/**
+    - /swagger-ui/index.html
     - /warm-flow-ui/config
 
 # 多租户配置
@@ -182,6 +184,9 @@ api-decrypt:
 springdoc:
   api-docs:
     # 是否开启接口文档
+    enabled: true
+  swagger-ui:
+    # 是否开启swagger-ui
     enabled: true
   info:
     # 标题

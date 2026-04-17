@@ -94,6 +94,81 @@ public class SysMenuVo implements Serializable {
     private String icon;
 
     /**
+     * 菜单标题（多语言 key）
+     */
+    private String title;
+
+    /**
+     * 激活图标
+     */
+    private String activeIcon;
+
+    /**
+     * 激活路径
+     */
+    private String activePath;
+
+    /**
+     * 是否固定标签页（0 否 1 是）
+     */
+    private Integer affixTab;
+
+    /**
+     * 固定标签页顺序
+     */
+    private Integer affixTabOrder;
+
+    /**
+     * 徽标内容
+     */
+    private String badge;
+
+    /**
+     * 徽标类型（dot/normal）
+     */
+    private String badgeType;
+
+    /**
+     * 徽标颜色
+     */
+    private String badgeVariants;
+
+    /**
+     * 是否隐藏子菜单（0 否 1 是）
+     */
+    private Integer hideChildren;
+
+    /**
+     * 是否隐藏面包屑（0 否 1 是）
+     */
+    private Integer hideBreadcrumb;
+
+    /**
+     * 是否隐藏标签栏（0 否 1 是）
+     */
+    private Integer hideTab;
+
+    /**
+     * 外链/内嵌地址
+     */
+    private String linkSrc;
+
+    /**
+     * 最大打开标签数
+     */
+    private Integer maxOpenTab;
+
+    /**
+     * 重定向地址
+     */
+    private String redirect;
+
+    /**
+     * 是否在菜单中隐藏（0 否 1 是）
+     */
+    private Integer hideInMenu;
+
+    /**
      * 创建部门
      */
     private Long createDept;

@@ -1,0 +1,224 @@
+import type { VxeTableGridColumns } from '@vben/plugins/vxe-table';
+
+import type { VbenFormSchema } from '#/adapter/form';
+import type { OnActionClickFn } from '#/adapter/vxe-table';
+
+import { z } from '#/adapter/form';
+import {
+  operationColumn,
+  statusColumn,
+  statusRadioField,
+  statusSelectField,
+} from '#/composables/useDataHelper';
+import { $t } from '#/locales';
+
+/**
+ * ${functionName}搜索表单
+ */
+export function useGridFormSchema(): VbenFormSchema[] {
+  return [
+#set($first = true)
+#foreach($column in $columns)
+#if($column.query)
+#if($first)
+#set($first = false)
+#end
+#set($parentheseIndex=$column.columnComment.indexOf("（"))
+#if($parentheseIndex != -1)
+#set($comment=$column.columnComment.substring(0, $parentheseIndex))
+#else
+#set($comment=$column.columnComment)
+#end
+#if($column.javaField == "status" && $column.dictType && $column.dictType != "")
+    statusSelectField($t('${moduleName}.${businessName}.${column.javaField}')),
+#elseif($column.htmlType == "input" || $column.htmlType == "textarea")
+    {
+      component: 'Input',
+      fieldName: '${column.javaField}',
+      label: $t('${moduleName}.${businessName}.${column.javaField}'),
+      componentProps: { placeholder: '请输入${comment}' },
+    },
+#elseif($column.htmlType == "select" || $column.htmlType == "radio")
+    {
+      component: 'Select',
+      fieldName: '${column.javaField}',
+      label: $t('${moduleName}.${businessName}.${column.javaField}'),
+      componentProps: {
+        allowClear: true,
+        placeholder: '请选择${comment}',
+#if($column.dictType && $column.dictType != "")
+        options: [], // TODO: 替换为字典 ${column.dictType}
+#else
+        options: [],
+#end
+      },
+    },
+#elseif($column.htmlType == "datetime" && $column.queryType == "BETWEEN")
+    {
+      component: 'RangePicker',
+      fieldName: '${column.javaField}',
+      label: $t('${moduleName}.${businessName}.${column.javaField}'),
+      componentProps: {
+        class: 'w-full',
+        placeholder: ['开始日期', '结束日期'],
+        valueFormat: 'YYYY-MM-DD',
+      },
+    },
+#elseif($column.htmlType == "datetime")
+    {
+      component: 'DatePicker',
+      fieldName: '${column.javaField}',
+      label: $t('${moduleName}.${businessName}.${column.javaField}'),
+      componentProps: {
+        class: 'w-full',
+        placeholder: '请选择${comment}',
+        valueFormat: 'YYYY-MM-DD',
+      },
+    },
+#end
+#end
+#end
+  ];
+}
+
+/**
+ * ${functionName}编辑表单
+ */
+export function useFormSchema(): VbenFormSchema[] {
+  return [
+#foreach($column in $columns)
+#if(($column.insert || $column.edit) && !$column.pk)
+#set($parentheseIndex=$column.columnComment.indexOf("（"))
+#if($parentheseIndex != -1)
+#set($comment=$column.columnComment.substring(0, $parentheseIndex))
+#else
+#set($comment=$column.columnComment)
+#end
+#if($column.javaField == "status" && $column.dictType && $column.dictType != "")
+    statusRadioField($t('${moduleName}.${businessName}.${column.javaField}')),
+#elseif($column.javaField == "remark")
+    {
+      component: 'Textarea',
+      fieldName: 'remark',
+      label: $t('common.remark'),
+      componentProps: { placeholder: '请输入备注', rows: 3 },
+    },
+#elseif($column.htmlType == "input")
+    {
+      component: 'Input',
+      fieldName: '${column.javaField}',
+      label: $t('${moduleName}.${businessName}.${column.javaField}'),
+#if($column.required)
+      rules: z.string().min(1, $t('ui.formRules.required', [$t('${moduleName}.${businessName}.${column.javaField}')]))
+#end
+      componentProps: { placeholder: '请输入${comment}' },
+    },
+#elseif($column.htmlType == "textarea")
+    {
+      component: 'Textarea',
+      fieldName: '${column.javaField}',
+      label: $t('${moduleName}.${businessName}.${column.javaField}'),
+#if($column.required)
+      rules: z.string().min(1, $t('ui.formRules.required', [$t('${moduleName}.${businessName}.${column.javaField}')]))
+#end
+      componentProps: { placeholder: '请输入${comment}', rows: 3 },
+    },
+#elseif($column.htmlType == "select" || $column.htmlType == "radio")
+    {
+      component: 'Select',
+      fieldName: '${column.javaField}',
+      label: $t('${moduleName}.${businessName}.${column.javaField}'),
+#if($column.required)
+      rules: z.string().min(1, $t('ui.formRules.required', [$t('${moduleName}.${businessName}.${column.javaField}')]))
+#end
+      componentProps: {
+        placeholder: '请选择${comment}',
+#if($column.dictType && $column.dictType != "")
+        options: [], // TODO: 替换为字典 ${column.dictType}
+#else
+        options: [],
+#end
+      },
+    },
+#elseif($column.htmlType == "datetime")
+    {
+      component: 'DatePicker',
+      fieldName: '${column.javaField}',
+      label: $t('${moduleName}.${businessName}.${column.javaField}'),
+#if($column.required)
+      rules: z.string().min(1, $t('ui.formRules.required', [$t('${moduleName}.${businessName}.${column.javaField}')]))
+#end
+      componentProps: {
+        class: 'w-full',
+        showTime: true,
+        placeholder: '请选择${comment}',
+      },
+    },
+#elseif($column.htmlType == "imageUpload")
+    {
+      component: 'Input',
+      fieldName: '${column.javaField}',
+      label: $t('${moduleName}.${businessName}.${column.javaField}'),
+      componentProps: { placeholder: '图片地址' },
+    },
+#elseif($column.htmlType == "editor")
+    {
+      component: 'Textarea',
+      fieldName: '${column.javaField}',
+      label: $t('${moduleName}.${businessName}.${column.javaField}'),
+      componentProps: { placeholder: '请输入内容', rows: 6 },
+    },
+#end
+#end
+#end
+  ];
+}
+
+/**
+ * ${functionName}表格列
+ */
+export function useColumns(
+  onActionClick?: OnActionClickFn<any>,
+  onStatusChange?: (newStatus: any, row: any) => PromiseLike<boolean | undefined>,
+): VxeTableGridColumns<any> {
+  return [
+    { type: 'checkbox', width: 50 },
+    { type: 'seq', width: 50, title: '#' },
+#foreach($column in $columns)
+#if($column.list && !$column.pk && $column.javaField != "")
+#set($parentheseIndex=$column.columnComment.indexOf("（"))
+#if($parentheseIndex != -1)
+#set($comment=$column.columnComment.substring(0, $parentheseIndex))
+#else
+#set($comment=$column.columnComment)
+#end
+#if($column.javaField == "status" && $column.dictType && $column.dictType != "")
+    statusColumn($t('${moduleName}.${businessName}.${column.javaField}'), onStatusChange),
+#elseif($column.dictType && $column.dictType != "")
+    {
+      cellRender: { name: 'CellTag' },
+      field: '${column.javaField}',
+      title: $t('${moduleName}.${businessName}.${column.javaField}'),
+      width: 100,
+    },
+#else
+    {
+      field: '${column.javaField}',
+      title: $t('${moduleName}.${businessName}.${column.javaField}'),
+      minWidth: 120,
+    },
+#end
+#end
+#end
+    operationColumn(
+      $t('${moduleName}.${businessName}.operation'),
+      onActionClick,
+      [
+        { code: 'edit', text: $t('common.edit') },
+        { code: 'delete', text: $t('common.delete') },
+      ],
+      '${columns.get(0).javaField}',
+      $t('${moduleName}.${businessName}.name'),
+    ),
+  ];
+}
