@@ -191,7 +191,7 @@ public class SysMenuServiceImpl implements ISysMenuService {
             router.setPath(menu.getRouterPath());
             router.setComponent(menu.getComponentInfo());
             router.setQuery(menu.getQueryParam());
-            router.setMeta(new MetaVo(menu.getMenuName(), menu.getIcon(), StringUtils.equals("1", menu.getIsCache()), menu.getPath(), menu.getRemark()));
+            router.setMeta(buildMetaVo(menu));
             List<SysMenu> cMenus = menu.getChildren();
             if (CollUtil.isNotEmpty(cMenus) && SystemConstants.TYPE_DIR.equals(menu.getMenuType())) {
                 router.setAlwaysShow(true);
@@ -205,12 +205,12 @@ public class SysMenuServiceImpl implements ISysMenuService {
                 children.setPath(menu.getPath());
                 children.setComponent(menu.getComponent());
                 children.setName(frameName);
-                children.setMeta(new MetaVo(menu.getMenuName(), menu.getIcon(), StringUtils.equals("1", menu.getIsCache()), menu.getPath(), menu.getRemark()));
+                children.setMeta(buildMetaVo(menu));
                 children.setQuery(menu.getQueryParam());
                 childrenList.add(children);
                 router.setChildren(childrenList);
             } else if (menu.getParentId().equals(Constants.TOP_PARENT_ID) && menu.isInnerLink()) {
-                router.setMeta(new MetaVo(menu.getMenuName(), menu.getIcon()));
+                router.setMeta(buildMetaVo(menu));
                 router.setPath("/");
                 List<RouterVo> childrenList = new ArrayList<>();
                 RouterVo children = new RouterVo();
@@ -219,13 +219,44 @@ public class SysMenuServiceImpl implements ISysMenuService {
                 children.setPath(routerPath);
                 children.setComponent(SystemConstants.INNER_LINK);
                 children.setName(innerLinkName);
-                children.setMeta(new MetaVo(menu.getMenuName(), menu.getIcon(), menu.getPath()));
+                children.setMeta(buildMetaVo(menu));
                 childrenList.add(children);
                 router.setChildren(childrenList);
             }
             routers.add(router);
         }
         return routers;
+    }
+    /**
+     * 构建路由元数据，包含 Vben 扩展字段
+     */
+    private MetaVo buildMetaVo(SysMenu menu) {
+        MetaVo meta = new MetaVo();
+        meta.setTitle(menu.getMenuName());
+        meta.setIcon(menu.getIcon());
+        meta.setNoCache(StringUtils.equals("1", menu.getIsCache()));
+        meta.setActiveIcon(StringUtils.isNotEmpty(menu.getActiveIcon()) ? menu.getActiveIcon() : null);
+        meta.setActivePath(StringUtils.isNotEmpty(menu.getActivePath()) ? menu.getActivePath() : null);
+        meta.setAffixTab(Integer.valueOf(1).equals(menu.getAffixTab()) ? true : null);
+        meta.setAffixTabOrder(menu.getAffixTabOrder() != null && menu.getAffixTabOrder() > 0 ? menu.getAffixTabOrder() : null);
+        meta.setBadge(StringUtils.isNotEmpty(menu.getBadge()) ? menu.getBadge() : null);
+        meta.setBadgeType(StringUtils.isNotEmpty(menu.getBadgeType()) ? menu.getBadgeType() : null);
+        meta.setBadgeVariants(StringUtils.isNotEmpty(menu.getBadgeVariants()) ? menu.getBadgeVariants() : null);
+        meta.setHideChildrenInMenu(Integer.valueOf(1).equals(menu.getHideChildren()) ? true : null);
+        meta.setHideInBreadcrumb(Integer.valueOf(1).equals(menu.getHideBreadcrumb()) ? true : null);
+        meta.setHideInTab(Integer.valueOf(1).equals(menu.getHideTab()) ? true : null);
+        meta.setMaxNumOfOpenTab(menu.getMaxOpenTab() != null && menu.getMaxOpenTab() > 0 ? menu.getMaxOpenTab() : null);
+        meta.setHideInMenu(Integer.valueOf(1).equals(menu.getHideInMenu()) ? true : null);
+        meta.setOrder(menu.getOrderNum());
+        // link: use remark if it starts with http
+        if (StringUtils.isNotEmpty(menu.getRemark()) && StringUtils.ishttp(menu.getRemark())) {
+            meta.setLink(menu.getRemark());
+        }
+        // iframeSrc: linkSrc
+        if (StringUtils.isNotEmpty(menu.getLinkSrc())) {
+            meta.setIframeSrc(menu.getLinkSrc());
+        }
+        return meta;
     }
 
     /**
